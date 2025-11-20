@@ -23,6 +23,9 @@ export default class TogetherProvider extends BaseProvider {
       provider: 'Together',
       maxTokenAllowed: 128000,
       maxCompletionTokens: 8192,
+      supportsVision: true,
+      supportsMultimodal: true,
+      visionMaxImages: 10,
     },
 
     // Mixtral 8x7B: 32k context, strong performance
@@ -64,13 +67,23 @@ export default class TogetherProvider extends BaseProvider {
     const res = (await response.json()) as any;
     const data = (res || []).filter((model: any) => model.type === 'chat');
 
-    return data.map((m: any) => ({
-      name: m.id,
-      label: `${m.display_name} - in:$${m.pricing.input.toFixed(2)} out:$${m.pricing.output.toFixed(2)} - context ${Math.floor(m.context_length / 1000)}k`,
-      provider: this.name,
-      maxTokenAllowed: 8000,
-      maxCompletionTokens: 8192,
-    }));
+    return data.map((m: any) => {
+      const isVisionModel = m.id.toLowerCase().includes('vision') || 
+                           m.id.toLowerCase().includes('vl') ||
+                           m.name?.toLowerCase().includes('vision');
+      const contextLength = m.context_length || 8000;
+      
+      return {
+        name: m.id,
+        label: `${m.display_name}${isVisionModel ? ' (Vision)' : ''} - in:$${m.pricing.input.toFixed(2)} out:$${m.pricing.output.toFixed(2)} - context ${Math.floor(contextLength / 1000)}k`,
+        provider: this.name,
+        maxTokenAllowed: contextLength,
+        maxCompletionTokens: 8192,
+        supportsVision: isVisionModel,
+        supportsMultimodal: isVisionModel,
+        visionMaxImages: isVisionModel ? 10 : undefined,
+      };
+    });
   }
 
   getModelInstance(options: {

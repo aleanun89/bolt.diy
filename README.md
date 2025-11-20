@@ -71,8 +71,9 @@ project, please check the [project management guide](./PROJECT.md) to get starte
 ## Features
 
 - **AI-powered full-stack web development** for **NodeJS based applications** directly in your browser.
-- **Support for 19+ LLMs** with an extensible architecture to integrate additional models.
-- **Attach images to prompts** for better contextual understanding.
+- **Support for 20+ LLMs** with an extensible architecture to integrate additional models.
+- **Vision-Language (VL) model support** including Qwen 2 VL for multimodal AI interactions.
+- **Attach images to prompts** for better contextual understanding with vision-capable models.
 - **Integrated terminal** to view output of LLM-run commands.
 - **Revert code to earlier versions** for easier debugging and quicker changes.
 - **Download projects as ZIP** for easy portability and sync to a folder on the host.
@@ -338,12 +339,13 @@ LMSTUDIO_BASE_URL=http://127.0.0.1:1234
 - **DeepSeek** - DeepSeek Coder and other DeepSeek models
 - **Mistral** - Mixtral, Mistral 7B, and other Mistral models
 - **Cohere** - Command R, Command R+, and other Cohere models
-- **Together AI** - Various open-source models
+- **Together AI** - Various open-source models including Llama Vision
 - **Perplexity** - Sonar models for search and reasoning
-- **HuggingFace** - Access to HuggingFace model hub
+- **HuggingFace** - Access to HuggingFace model hub including Qwen VL models
 - **OpenRouter** - Unified API for multiple model providers
-- **Moonshot (Kimi)** - Kimi AI models
-- **Hyperbolic** - High-performance model inference
+- **Moonshot (Kimi)** - Kimi AI models with vision support
+- **Hyperbolic** - High-performance model inference with Qwen 2 VL
+- **Qwen** - Official Qwen models including Qwen 2 VL and future Qwen 3 VL models
 - **GitHub Models** - Models available through GitHub
 - **Amazon Bedrock** - AWS managed AI models
 

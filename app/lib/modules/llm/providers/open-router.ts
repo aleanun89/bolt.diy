@@ -71,11 +71,19 @@ export default class OpenRouterProvider extends BaseProvider {
           const maxAllowed = 1000000; // 1M tokens max for safety
           const finalContext = Math.min(contextWindow, maxAllowed);
 
+          // Detect vision models by ID or name
+          const isVisionModel = m.id.toLowerCase().includes('vision') || 
+                               m.id.toLowerCase().includes('vl') ||
+                               m.name?.toLowerCase().includes('vision');
+
           return {
             name: m.id,
-            label: `${m.name} - in:$${(m.pricing.prompt * 1_000_000).toFixed(2)} out:$${(m.pricing.completion * 1_000_000).toFixed(2)} - context ${finalContext >= 1000000 ? Math.floor(finalContext / 1000000) + 'M' : Math.floor(finalContext / 1000) + 'k'}`,
+            label: `${m.name}${isVisionModel ? ' (Vision)' : ''} - in:$${(m.pricing.prompt * 1_000_000).toFixed(2)} out:$${(m.pricing.completion * 1_000_000).toFixed(2)} - context ${finalContext >= 1000000 ? Math.floor(finalContext / 1000000) + 'M' : Math.floor(finalContext / 1000) + 'k'}`,
             provider: this.name,
             maxTokenAllowed: finalContext,
+            supportsVision: isVisionModel,
+            supportsMultimodal: isVisionModel,
+            visionMaxImages: isVisionModel ? 10 : undefined,
           };
         });
     } catch (error) {

@@ -17,13 +17,15 @@ export default class HyperbolicProvider extends BaseProvider {
       name: 'Qwen/Qwen2.5-Coder-32B-Instruct',
       label: 'Qwen 2.5 Coder 32B Instruct',
       provider: 'Hyperbolic',
-      maxTokenAllowed: 8192,
+      maxTokenAllowed: 32768,
+      maxCompletionTokens: 8192,
     },
     {
       name: 'Qwen/Qwen2.5-72B-Instruct',
       label: 'Qwen2.5-72B-Instruct',
       provider: 'Hyperbolic',
-      maxTokenAllowed: 8192,
+      maxTokenAllowed: 32768,
+      maxCompletionTokens: 8192,
     },
     {
       name: 'deepseek-ai/DeepSeek-V2.5',
@@ -35,13 +37,18 @@ export default class HyperbolicProvider extends BaseProvider {
       name: 'Qwen/QwQ-32B-Preview',
       label: 'QwQ-32B-Preview',
       provider: 'Hyperbolic',
-      maxTokenAllowed: 8192,
+      maxTokenAllowed: 32768,
+      maxCompletionTokens: 8192,
     },
     {
       name: 'Qwen/Qwen2-VL-72B-Instruct',
-      label: 'Qwen2-VL-72B-Instruct',
+      label: 'Qwen2-VL-72B-Instruct (Vision)',
       provider: 'Hyperbolic',
-      maxTokenAllowed: 8192,
+      maxTokenAllowed: 32768,
+      maxCompletionTokens: 8192,
+      supportsVision: true,
+      supportsMultimodal: true,
+      visionMaxImages: 10,
     },
   ];
 
@@ -73,12 +80,23 @@ export default class HyperbolicProvider extends BaseProvider {
 
     const data = res.data.filter((model: any) => model.object === 'model' && model.supports_chat);
 
-    return data.map((m: any) => ({
-      name: m.id,
-      label: `${m.id} - context ${m.context_length ? Math.floor(m.context_length / 1000) + 'k' : 'N/A'}`,
-      provider: this.name,
-      maxTokenAllowed: m.context_length || 8000,
-    }));
+    return data.map((m: any) => {
+      const isVisionModel = m.id.toLowerCase().includes('vl') || 
+                           m.id.toLowerCase().includes('vision') ||
+                           m.modalities?.includes('vision');
+      const contextLength = m.context_length || 8000;
+      
+      return {
+        name: m.id,
+        label: `${m.id}${isVisionModel ? ' (Vision)' : ''} - context ${contextLength ? Math.floor(contextLength / 1000) + 'k' : 'N/A'}`,
+        provider: this.name,
+        maxTokenAllowed: contextLength,
+        maxCompletionTokens: Math.min(Math.floor(contextLength / 4), 8192),
+        supportsVision: isVisionModel,
+        supportsMultimodal: isVisionModel,
+        visionMaxImages: isVisionModel ? 10 : undefined,
+      };
+    });
   }
 
   getModelInstance(options: {
