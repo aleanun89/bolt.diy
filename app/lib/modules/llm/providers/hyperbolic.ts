@@ -81,11 +81,10 @@ export default class HyperbolicProvider extends BaseProvider {
     const data = res.data.filter((model: any) => model.object === 'model' && model.supports_chat);
 
     return data.map((m: any) => {
-      const isVisionModel = m.id.toLowerCase().includes('vl') || 
-                           m.id.toLowerCase().includes('vision') ||
-                           m.modalities?.includes('vision');
+      const isVisionModel =
+        m.id.toLowerCase().includes('vl') || m.id.toLowerCase().includes('vision') || m.modalities?.includes('vision');
       const contextLength = m.context_length || 8000;
-      
+
       return {
         name: m.id,
         label: `${m.id}${isVisionModel ? ' (Vision)' : ''} - context ${contextLength ? Math.floor(contextLength / 1000) + 'k' : 'N/A'}`,

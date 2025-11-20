@@ -68,11 +68,12 @@ export default class TogetherProvider extends BaseProvider {
     const data = (res || []).filter((model: any) => model.type === 'chat');
 
     return data.map((m: any) => {
-      const isVisionModel = m.id.toLowerCase().includes('vision') || 
-                           m.id.toLowerCase().includes('vl') ||
-                           m.name?.toLowerCase().includes('vision');
+      const isVisionModel =
+        m.id.toLowerCase().includes('vision') ||
+        m.id.toLowerCase().includes('vl') ||
+        m.name?.toLowerCase().includes('vision');
       const contextLength = m.context_length || 8000;
-      
+
       return {
         name: m.id,
         label: `${m.display_name}${isVisionModel ? ' (Vision)' : ''} - in:$${m.pricing.input.toFixed(2)} out:$${m.pricing.output.toFixed(2)} - context ${Math.floor(contextLength / 1000)}k`,

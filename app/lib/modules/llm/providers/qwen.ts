@@ -5,12 +5,12 @@ import type { LanguageModelV1 } from 'ai';
 
 /**
  * Qwen Provider - Optimized for Qwen models with enhanced VL support
- * 
+ *
  * This provider is specifically designed to support Qwen models, including:
  * - Qwen 2.5 Coder models
  * - Qwen 2 VL (Vision-Language) models
  * - Future Qwen 3 VL models when available
- * 
+ *
  * Features:
  * - Automatic vision capability detection
  * - Optimized context windows for Qwen models
@@ -41,6 +41,7 @@ export default class QwenProvider extends BaseProvider {
       maxTokenAllowed: 32768,
       maxCompletionTokens: 8192,
     },
+
     // Qwen 2 VL models - vision-language models
     {
       name: 'qwen-vl-plus',
@@ -62,6 +63,7 @@ export default class QwenProvider extends BaseProvider {
       supportsMultimodal: true,
       visionMaxImages: 10,
     },
+
     // Placeholder for future Qwen 3 VL models
     {
       name: 'qwen3-vl-7b',
@@ -113,9 +115,10 @@ export default class QwenProvider extends BaseProvider {
         .filter((m: any) => m.id || m.name)
         .map((m: any) => {
           const modelId = m.id || m.name;
-          const isVisionModel = modelId.toLowerCase().includes('vl') || 
-                               modelId.toLowerCase().includes('vision') ||
-                               m.capabilities?.includes('vision');
+          const isVisionModel =
+            modelId.toLowerCase().includes('vl') ||
+            modelId.toLowerCase().includes('vision') ||
+            m.capabilities?.includes('vision');
           const contextLength = m.context_length || m.max_tokens || 32768;
 
           return {

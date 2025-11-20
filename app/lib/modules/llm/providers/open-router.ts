@@ -72,9 +72,10 @@ export default class OpenRouterProvider extends BaseProvider {
           const finalContext = Math.min(contextWindow, maxAllowed);
 
           // Detect vision models by ID or name
-          const isVisionModel = m.id.toLowerCase().includes('vision') || 
-                               m.id.toLowerCase().includes('vl') ||
-                               m.name?.toLowerCase().includes('vision');
+          const isVisionModel =
+            m.id.toLowerCase().includes('vision') ||
+            m.id.toLowerCase().includes('vl') ||
+            m.name?.toLowerCase().includes('vision');
 
           return {
             name: m.id,
